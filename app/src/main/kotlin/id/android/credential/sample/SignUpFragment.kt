@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.credentials.CreatePublicKeyCredentialRequest
 import androidx.credentials.CreatePublicKeyCredentialResponse
 import androidx.credentials.CredentialManager
 import androidx.credentials.exceptions.CreateCredentialCancellationException
@@ -98,17 +99,30 @@ class SignUpFragment : Fragment() {
       } else {
         lifecycleScope.launch {
           configureViews(View.VISIBLE, false)
-          // TODO : Call createPasskey() to sign up with passkey
+
+          val data = createPasskey()
           configureViews(View.INVISIBLE, true)
-          // TODO : complete the registration process after sending public key credential to your server and let the user in
+
+          data?.let {
+            registerResponse()
+            DataProvider.setSignedInThroughPasskeys(true)
+            listener.showHome()
+          }
         }
       }
     }
   }
 
   private fun fetchRegistrationJsonFromServer(): String {
-    // TODO fetch registration mock response
-    return ""
+    val response = requireContext().readFromAsset("RegFromServer")
+
+    /**
+     * Update userId,challenge, name and Display name in the mock
+     */
+    return response.replace("<userId>", getEncodedUserId())
+      .replace("<userName>", binding.username.text.toString())
+      .replace("<userDisplayName>", binding.username.text.toString())
+      .replace("<challenge>", getEncodedChallenge())
   }
 
   private fun getEncodedUserId(): String {
@@ -144,8 +158,17 @@ class SignUpFragment : Fragment() {
 
   private suspend fun createPasskey(): CreatePublicKeyCredentialResponse? {
     var response: CreatePublicKeyCredentialResponse? = null
-    // TODO create a CreatePublicKeyCredentialRequest() with necessary registration json from server
-    // TODO call createCredential() with createPublicKeyCredentialRequest
+
+    val request = CreatePublicKeyCredentialRequest(fetchRegistrationJsonFromServer())
+    try {
+      response = credentialManager.createCredential(
+        requireActivity(),
+        request
+      ) as CreatePublicKeyCredentialResponse
+    } catch (e: CreateCredentialException) {
+      configureProgress(View.VISIBLE)
+      handlePasskeyFailure(e)
+    }
 
     return response
   }

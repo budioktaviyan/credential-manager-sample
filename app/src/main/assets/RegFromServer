@@ -14,13 +14,18 @@
             "alg": -257
         }
     ],
+    "timeout": 1800000,
+    "attestation": "none",
+    "excludeCredentials": [],
     "authenticatorSelection": {
         "authenticatorAttachment": "platform",
-        "residentKey": "required"
+        "residentKey": "required",
+        "requireResidentKey": true,
+        "userVerification": "required"
     },
     "user": {
-           "id": "<userId>",
-           "name": "<userName>",
-           "displayName": "<userDisplayName>"
-       }
+        "id": "<userId>",
+        "name": "<userName>",
+        "displayName": "<userDisplayName>"
+    }
 }
