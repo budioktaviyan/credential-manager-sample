@@ -9,6 +9,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.credentials.CreatePasswordRequest
+import androidx.credentials.CreatePasswordResponse
 import androidx.credentials.CreatePublicKeyCredentialRequest
 import androidx.credentials.CreatePublicKeyCredentialResponse
 import androidx.credentials.CredentialManager
@@ -73,8 +75,7 @@ class SignUpFragment : Fragment() {
       } else {
         lifecycleScope.launch {
           configureViews(View.VISIBLE, false)
-
-          // TODO : Save the user credential password with their password provider
+          createPassword()
           simulateServerDelayAndLogIn()
         }
       }
@@ -152,8 +153,19 @@ class SignUpFragment : Fragment() {
   }
 
   private suspend fun createPassword() {
-    // TODO : CreatePasswordRequest with entered username and password
-    // TODO : Create credential with created password request
+    val request = CreatePasswordRequest(
+      binding.username.text.toString(),
+      binding.password.text.toString()
+    )
+
+    try {
+      credentialManager.createCredential(
+        requireActivity(),
+        request
+      ) as CreatePasswordResponse
+    } catch (e: Exception) {
+      Log.e("Auth", " Exception Message : " + e.message)
+    }
   }
 
   private suspend fun createPasskey(): CreatePublicKeyCredentialResponse? {
