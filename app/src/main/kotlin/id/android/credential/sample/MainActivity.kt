@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import id.android.credential.sample.HomeFragment.HomeFragmentCallback
 import id.android.credential.sample.MainFragment.MainFragmentCallback
-import id.android.credential.sample.R
 import id.android.credential.sample.SignInFragment.SignInFragmentCallback
 import id.android.credential.sample.SignUpFragment.SignUpFragmentCallback
 import id.android.credential.sample.databinding.ActivityMainBinding

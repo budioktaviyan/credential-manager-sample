@@ -44,7 +44,7 @@ android {
     jvmTarget = "17"
   }
   buildFeatures.viewBinding = true
-  composeOptions.kotlinCompilerExtensionVersion = "1.5.4"
+  composeOptions.kotlinCompilerExtensionVersion = "1.5.6"
   packaging {
     resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
   }
